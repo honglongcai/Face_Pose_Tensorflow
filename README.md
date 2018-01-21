@@ -8,4 +8,7 @@ This project represents a real-time multi-person face pose estimation method. I 
  OpenCV
  Dlib
  Glob
+ 
+##License:
 
+ MIT LICENSE
