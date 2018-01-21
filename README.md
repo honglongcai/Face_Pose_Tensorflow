@@ -9,6 +9,6 @@ This project represents a real-time multi-person face pose estimation method. I 
  Dlib
  Glob
  
-##License:
+## License:
 
  MIT LICENSE
