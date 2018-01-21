@@ -9,8 +9,6 @@
 
  Dlib
 
- Glob
-
 ## Model:
  
  Pretrained Tensorflow model is in the pnn1530_2 directory
