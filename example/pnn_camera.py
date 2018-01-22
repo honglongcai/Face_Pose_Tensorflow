@@ -71,7 +71,7 @@ while cap.isOpened():
 		print('None')
 		continue
 	for i,d in enumerate(ds):
-		l,t,r,b=d.left(),d.top(),d.right(),d.bottom()
+		l,t,r,b=max(0,d.left()),max(0,d.top()),max(0,d.right()),max(0,d.bottom())
 		cv2.rectangle(imgcv,(l,t),(r,b),(255,0,0),2)
 		gimg=cv2.cvtColor(imgcv[t:b,l:r,:],cv2.COLOR_BGR2GRAY)
 		gimg1=cv2.resize(gimg,(40,40))
