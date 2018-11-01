@@ -13,7 +13,7 @@
  
  Pretrained Tensorflow model is in the pnn1530_2 directory
 
-## Example Videa:
+## Example Video:
 
 [![Watch the video](https://img.youtube.com/vi/QG5eheTpjNc/0.jpg)](https://www.youtube.com/embed/QG5eheTpjNc)
 
