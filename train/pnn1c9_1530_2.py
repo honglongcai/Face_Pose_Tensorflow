@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import csv
 import glob
 
@@ -56,13 +56,14 @@ Y_test=Y[11000:12335]
 nt=6500
 idr1=np.arange(nt)
 pnum=0
-directories=glob.glob('images/*')
+directories=glob.glob('../data/images/*')
+print(directories)
 X=np.zeros((10000,40*40),dtype='uint8')
 Y=np.zeros((10000,9))
 for directory in directories:
 	images=glob.glob(directory+'/*')
 	for image in images:
-		c=int(image.split('/')[1])
+		c=int(directory.split('/')[-1])
 		X[pnum,:]=cv2.imread(image,0).reshape(40*40,)
 		Y[pnum,c]=1.
 		pnum+=1
@@ -78,6 +79,7 @@ print(X_train.shape,Y_train.shape)
 
 x=tf.placeholder(tf.float32,shape=[None,40*40])
 y_=tf.placeholder(tf.float32,shape=[None,9])
+
 
 def weight_variable(shape):
 	initial=tf.truncated_normal(shape,stddev=0.1)
@@ -114,13 +116,13 @@ b_fc1=bias_variable([512])
 h_pool2_flat=tf.reshape(h_pool2,[-1,20*20*30])
 h_fc1=tf.nn.relu(tf.matmul(h_pool2_flat,W_fc1)+b_fc1)
 
-keep_prob=tf.placeholder(tf.float32)
-h_fc1_drop=tf.nn.dropout(h_fc1,keep_prob)
+#rate=tf.placeholder(tf.float32)
+#h_fc1_drop=tf.nn.dropout(h_fc1,rate=rate)
 
 W_fc2=weight_variable([512,9])
 b_fc2=bias_variable([9])
 
-y_conv=tf.matmul(h_fc1_drop,W_fc2)+b_fc2
+y_conv=tf.matmul(h_fc1,W_fc2)+b_fc2
 
 cross_entropy=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_,logits=y_conv))
 
@@ -128,22 +130,31 @@ train_step=tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction=tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
 accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
 
+train_data = {x: X_train, y_: Y_train}
+dataset = tf.data.Dataset.from_tensor_slices(train_data)
+dataset = dataset.repeat()
+dataset = dataset.shuffle(512)
+dataset = dataset.batch(64)
+iterator = dataset.make_one_shot_iterator()
+
 with tf.Session() as sess:
 	sess.run(tf.global_variables_initializer())
 	saver=tf.train.Saver()
 	for i in range(80000):
-		np.random.shuffle(idr1)
-		batch=idr1[:50]
-		if i%100==0:
-			train_accuracy=accuracy.eval(feed_dict={x:X_train[batch],y_:Y_train[batch],keep_prob:1.0})
+		# np.random.shuffle(idr1)
+		# batch=idr1[:64]
+		'''
+		if i%1000==0:
+			train_accuracy=accuracy.eval(feed_dict=iterator.get_next())
 			ty=sess.run(tf.argmax(Y_train[batch],1))
-			py=sess.run(tf.argmax(y_conv,1),feed_dict={x:X_train[batch],keep_prob:1.0})
-			for ij in range(50):
-				print(ty[ij],py[ij])
+			py=sess.run(tf.argmax(y_conv,1),feed_dict={x:X_train[batch],rate:0.0})
+			#for ij in range(50):
+			#	print(ty[ij],py[ij])
 			print('step {}, ta{}'.format(i,train_accuracy))
-		train_step.run(feed_dict={x:X_train[batch],y_:Y_train[batch],keep_prob:0.5})
-	print('test a {}'.format(accuracy.eval(feed_dict={x:X_test,y_:Y_test,keep_prob:1.0})))		
-	saver.save(sess,'pnn1530_2/hehe.ckpt')
+		'''
+		train_step.run(feed_dict=iterator.get_next())
+	print('test a {}'.format(accuracy.eval(feed_dict={x:X_test,y_:Y_test})))
+	saver.save(sess,'models/test.ckpt')
 
 
 
