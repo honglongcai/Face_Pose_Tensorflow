@@ -36,6 +36,7 @@
  Add SavedModel module which makes stored model easily used.
 
 ## Example Video:
+Don't forget to give it a thumbs-up.
 
 [![Watch the video](https://img.youtube.com/vi/QG5eheTpjNc/0.jpg)](https://www.youtube.com/embed/QG5eheTpjNc)
 
