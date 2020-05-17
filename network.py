@@ -14,8 +14,8 @@ def network(features, mode):
                                 filters=32, strides=(1, 1), padding='same',
                                 kernel_initializer=tf.variance_scaling_initializer())
     features = tf.nn.relu(features)
-    features = tf.nn.max_pool2d(features, ksize=2, strides=2, padding='SAME')
-    features = tf.reshape(features, [-1, 10 * 10 * 32])
+    # features = tf.nn.max_pool2d(features, ksize=2, strides=2, padding='SAME')
+    features = tf.reshape(features, [-1, 20 * 20 * 32])
     features = tf.layers.dense(
         inputs=features,
         units=512,

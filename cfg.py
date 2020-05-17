@@ -19,10 +19,10 @@ parser.add_argument('--eval_batch_size', type=int,
                     default=16)
 
 parser.add_argument('--lr_values', type=float,
-                    nargs='+', default=[0.001, 0.0001])
+                    nargs='+', default=[0.0001, 0.00005])
 
 parser.add_argument('--lr_decay_at_step', type=int,
-                    nargs='+', default=[20000])
+                    nargs='+', default=[30000])
 
 
 FLAGS, unparsed = parser.parse_known_args()

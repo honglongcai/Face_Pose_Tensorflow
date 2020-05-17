@@ -30,7 +30,7 @@ class DataLoader(object):
         X = X / np.max(X)
         num = X.shape[0]
         num_train = int(num * 0.9)
-        idr = np.arange(num_train)
+        idr = np.arange(num)
         np.random.shuffle(idr)
         X_train = X[idr[:num_train], :]
         X_test = X[idr[num_train:], :]
